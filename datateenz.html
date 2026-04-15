@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datateenz — What is a Variable?</title>
+<style>
+/* ── RESET & BASE ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --purple:#7C3AED;--purple-light:#EDE9FE;--purple-mid:#C4B5FD;--purple-dark:#4C1D95;
+  --yellow:#FBBF24;--yellow-light:#FEF3C7;
+  --green:#10B981;--green-light:#D1FAE5;
+  --red:#EF4444;--red-light:#FEE2E2;
+  --blue:#3B82F6;--blue-light:#DBEAFE;
+  --pink:#EC4899;--pink-light:#FCE7F3;
+  --dark:#1E1B4B;--mid:#6B7280;--light:#F9FAFB;
+  --white:#FFFFFF;
+  --radius:14px;--radius-sm:8px;--radius-lg:20px;
+  --shadow:0 4px 24px rgba(124,58,237,0.10);
+  --shadow-card:0 2px 16px rgba(30,27,75,0.08);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,sans-serif;
+  background:var(--light);color:var(--dark);
+  line-height:1.6;font-size:16px;
+  overflow-x:hidden;
+}
+.skip-link{
+  position:absolute;top:-100px;left:0;background:var(--purple);color:#fff;
+  padding:8px 16px;border-radius:0 0 8px 0;font-weight:600;z-index:9999;
+  transition:top .2s;
+}
+.skip-link:focus{top:0}
+#cover{
+  min-height:100vh;
+  background:linear-gradient(135deg,#1E1B4B 0%,#4C1D95 50%,#7C3AED 100%);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.cover-bg-circle{
+  position:absolute;border-radius:50%;opacity:.12;
+  background:var(--yellow);
+}
+.cb1{width:400px;height:400px;top:-100px;right:-100px}
+.cb2{width:250px;height:250px;bottom:60px;left:-60px}
+.cb3{width:150px;height:150px;top:40%;left:40%}
+.cover-nav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:24px 40px;position:relative;z-index:2;
+}
+.brand-logo{
+  font-size:15px;font-weight:700;letter-spacing:.5px;
+  color:rgba(255,255,255,0.9);display:flex;align-items:center;gap:8px;
+}
+.brand-logo .hash{
+  background:var(--yellow);color:var(--dark);
+  width:28px;height:28px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:900;
+}
+.cover-badge{
+  background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.25);
+  color:#fff;font-size:12px;font-weight:600;
+  padding:6px 14px;border-radius:20px;letter-spacing:.5px;
+}
+.cover-body{
+  flex:1;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  text-align:center;padding:40px 24px;
+  position:relative;z-index:2;
+}
+.cover-emoji{
+  font-size:72px;margin-bottom:16px;
+  animation:float 3s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.cover-label{
+  background:var(--yellow);color:var(--dark);
+  font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  padding:6px 18px;border-radius:20px;margin-bottom:20px;display:inline-block;
+}
+.cover h1{
+  font-size:clamp(2rem,6vw,3.5rem);font-weight:800;
+  color:#fff;line-height:1.15;max-width:700px;
+  margin-bottom:16px;
+}
+.cover h1 span{color:var(--yellow)}
+.cover-sub{
+  font-size:1.1rem;color:rgba(255,255,255,0.75);
+  max-width:500px;margin-bottom:40px;
+}
+.cover-pills{
+  display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:40px;
+}
+.cover-pill{
+  background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.2);
+  color:rgba(255,255,255,0.9);font-size:13px;
+  padding:7px 16px;border-radius:20px;
+}
+.btn-start{
+  background:var(--yellow);color:var(--dark);
+  font-size:1rem;font-weight:700;
+  padding:16px 40px;border-radius:40px;
+  border:none;cursor:pointer;
+  box-shadow:0 8px 32px rgba(251,191,36,0.4);
+  transition:transform .2s,box-shadow .2s;
+  display:flex;align-items:center;gap:10px;
+}
+.btn-start:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(251,191,36,0.5)}
+.btn-start:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.cover-footer{
+  text-align:center;padding:20px;
+  color:rgba(255,255,255,0.4);font-size:12px;
+  position:relative;z-index:2;
+}
+#progress-bar-wrap{
+  position:sticky;top:0;z-index:100;
+  background:#fff;border-bottom:1px solid #E5E7EB;
+  padding:0 24px;display:none;
+}
+.progress-inner{
+  max-width:900px;margin:0 auto;
+  display:flex;align-items:center;gap:14px;padding:12px 0;
+}
+.progress-logo{font-size:13px;font-weight:700;color:var(--purple);white-space:nowrap}
+.progress-track{flex:1;background:#E5E7EB;border-radius:20px;height:8px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:20px;transition:width .4s ease;width:0%}
+.progress-label{font-size:12px;color:var(--mid);white-space:nowrap;min-width:48px;text-align:right}
+#lesson{display:none;padding-bottom:80px}
+.lesson-container{max-width:860px;margin:0 auto;padding:40px 24px 0}
+.section-card{
+  background:var(--white);border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-card);padding:36px;
+  margin-bottom:28px;border:1px solid #F3F4F6;
+  animation:slideUp .5s ease both;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.section-card:nth-child(2){animation-delay:.1s}
+.section-card:nth-child(3){animation-delay:.2s}
+.section-card:nth-child(4){animation-delay:.3s}
+.section-card:nth-child(5){animation-delay:.4s}
+.section-card:nth-child(6){animation-delay:.5s}
+.section-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+  padding:5px 12px;border-radius:20px;margin-bottom:14px;
+}
+.tag-purple{background:var(--purple-light);color:var(--purple)}
+.tag-green{background:var(--green-light);color:#065F46}
+.tag-yellow{background:var(--yellow-light);color:#92400E}
+.tag-blue{background:var(--blue-light);color:#1E40AF}
+.tag-pink{background:var(--pink-light);color:#9D174D}
+.section-card h2{font-size:1.4rem;font-weight:700;color:var(--dark);margin-bottom:14px;}
+.section-card p{color:#374151;line-height:1.75;margin-bottom:12px}
+.section-card p:last-child{margin-bottom:0}
+.obj-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.obj-list li{
+  display:flex;align-items:flex-start;gap:12px;
+  background:var(--purple-light);border-radius:var(--radius-sm);
+  padding:12px 16px;font-size:.95rem;color:var(--dark);
+}
+.obj-num{
+  background:var(--purple);color:#fff;
+  width:24px;height:24px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;flex-shrink:0;
+}
+.analogy-box{
+  background:linear-gradient(135deg,var(--yellow-light),#FDE68A);
+  border:2px solid var(--yellow);border-radius:var(--radius);
+  padding:20px 24px;margin:20px 0;
+  display:flex;gap:16px;align-items:flex-start;
+}
+.analogy-icon{font-size:32px;flex-shrink:0}
+.analogy-box strong{display:block;font-size:.9rem;font-weight:700;color:#92400E;margin-bottom:4px;letter-spacing:.5px;text-transform:uppercase}
+.analogy-box p{color:#78350F;margin:0;font-size:.95rem}
+.code-wrap{background:#1E1B4B;border-radius:var(--radius);overflow:hidden;margin:20px 0;}
+.code-header{
+  background:#2D2A5E;padding:10px 20px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.code-header span{color:#C4B5FD;font-size:12px;font-weight:600;letter-spacing:.5px}
+.code-dots{display:flex;gap:6px}
+.code-dot{width:10px;height:10px;border-radius:50%}
+.dot-r{background:#EF4444}.dot-y{background:#FBBF24}.dot-g{background:#10B981}
+.code-body{padding:20px 24px;overflow-x:auto}
+.code-body pre{font-family:'Courier New',monospace;font-size:.88rem;line-height:1.7;color:#E2E8F0}
+.cm{color:#6B7280;font-style:italic}
+.ck{color:#C4B5FD}
+.cs{color:#86EFAC}
+.cn{color:#FCA5A5}
+.cv{color:#FDE68A}
+.try-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+@media(max-width:600px){.try-grid{grid-template-columns:1fr}}
+.try-field{display:flex;flex-direction:column;gap:6px}
+.try-field label{font-size:13px;font-weight:600;color:var(--mid);letter-spacing:.3px}
+.try-field input{
+  padding:12px 16px;border:2px solid #E5E7EB;border-radius:var(--radius-sm);
+  font-size:.95rem;color:var(--dark);background:#fff;
+  transition:border-color .2s,box-shadow .2s;font-family:inherit;
+}
+.try-field input:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px var(--purple-light);}
+.try-field input:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+.btn-run{
+  margin-top:16px;background:var(--purple);color:#fff;
+  font-size:.95rem;font-weight:700;
+  padding:13px 32px;border-radius:40px;border:none;cursor:pointer;
+  transition:transform .15s,background .2s;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-run:hover{background:var(--purple-dark);transform:translateY(-2px)}
+.btn-run:focus-visible{outline:3px solid var(--purple-dark);outline-offset:3px}
+.output-box{
+  margin-top:16px;background:var(--purple-light);
+  border:2px solid var(--purple-mid);border-radius:var(--radius);
+  padding:16px 20px;font-size:1rem;color:var(--purple-dark);
+  font-weight:600;min-height:52px;display:none;
+  animation:pop .3s ease;
+}
+@keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+.funfact{
+  background:linear-gradient(135deg,#1E1B4B,#4C1D95);
+  border-radius:var(--radius);padding:28px;color:#fff;
+  display:flex;gap:20px;align-items:flex-start;margin-top:4px;
+}
+.funfact-icon{font-size:40px;flex-shrink:0}
+.funfact h3{font-size:1rem;font-weight:700;color:var(--yellow);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.funfact p{color:rgba(255,255,255,0.85);font-size:.95rem;margin:0;line-height:1.7}
+.realworld{
+  background:var(--green-light);border-left:4px solid var(--green);
+  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  padding:16px 20px;margin-top:16px;
+}
+.realworld strong{display:block;color:#065F46;font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
+.realworld p{color:#064E3B;margin:0;font-size:.95rem}
+.quiz-progress{display:flex;gap:8px;margin-bottom:24px;justify-content:center;}
+.quiz-dot{width:32px;height:8px;border-radius:4px;background:#E5E7EB;transition:background .3s;}
+.quiz-dot.correct{background:var(--green)}
+.quiz-dot.wrong{background:var(--red)}
+.question-wrap{display:none}
+.question-wrap.active{display:block}
+.question-num{font-size:12px;font-weight:700;color:var(--mid);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.question-text{font-size:1.1rem;font-weight:600;color:var(--dark);margin-bottom:20px;line-height:1.5}
+.options-list{display:flex;flex-direction:column;gap:10px}
+.option-btn{
+  background:var(--white);border:2px solid #E5E7EB;
+  border-radius:var(--radius);padding:14px 20px;
+  text-align:left;font-size:.95rem;color:var(--dark);
+  cursor:pointer;font-family:inherit;font-weight:500;
+  transition:border-color .2s,background .2s,transform .1s;
+  display:flex;align-items:center;gap:12px;
+}
+.option-btn:hover:not(:disabled){border-color:var(--purple);background:var(--purple-light);transform:translateX(4px)}
+.option-btn:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+.option-btn.correct{background:var(--green-light);border-color:var(--green);color:#065F46}
+.option-btn.wrong{background:var(--red-light);border-color:var(--red);color:#991B1B}
+.option-btn:disabled{cursor:not-allowed}
+.option-letter{
+  width:28px;height:28px;border-radius:50%;
+  background:#F3F4F6;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;flex-shrink:0;
+  transition:background .2s,color .2s;
+}
+.option-btn.correct .option-letter{background:var(--green);color:#fff}
+.option-btn.wrong .option-letter{background:var(--red);color:#fff}
+.feedback-msg{margin-top:14px;padding:12px 18px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;display:none;}
+.feedback-msg.show{display:block;animation:pop .25s ease}
+.feedback-correct{background:var(--green-light);color:#065F46;border:1px solid #A7F3D0}
+.feedback-wrong{background:var(--red-light);color:#991B1B;border:1px solid #FECACA}
+.btn-next{
+  margin-top:20px;background:var(--purple);color:#fff;
+  padding:12px 28px;border-radius:40px;border:none;
+  font-size:.9rem;font-weight:700;cursor:pointer;
+  display:none;transition:background .2s;
+}
+.btn-next:hover{background:var(--purple-dark)}
+.btn-next:focus-visible{outline:3px solid var(--purple-dark);outline-offset:3px}
+.blank-input{
+  display:inline-block;border:none;border-bottom:3px solid var(--purple);
+  background:var(--purple-light);border-radius:4px 4px 0 0;
+  padding:4px 12px;font-size:1rem;font-weight:700;color:var(--purple-dark);
+  text-align:center;width:140px;font-family:inherit;
+}
+.blank-input:focus{outline:none;background:#DDD6FE}
+.blank-input:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+.blank-sentence{
+  font-size:1.05rem;line-height:2.5;color:var(--dark);
+  background:var(--light);border-radius:var(--radius);padding:20px 24px;margin:16px 0;
+}
+.btn-check{
+  background:var(--green);color:#fff;
+  padding:11px 26px;border-radius:40px;border:none;
+  font-size:.9rem;font-weight:700;cursor:pointer;margin-right:8px;transition:background .2s;
+}
+.btn-check:hover{background:#059669}
+.btn-check:focus-visible{outline:3px solid #065F46;outline-offset:3px}
+.blank-result{margin-top:12px;padding:12px 18px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;display:none;}
+.blank-result.show{display:block;animation:pop .25s ease}
+#score-screen{display:none;text-align:center;padding:20px 0;}
+.score-circle{
+  width:120px;height:120px;border-radius:50%;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  margin:0 auto 24px;color:#fff;
+  box-shadow:0 8px 32px rgba(124,58,237,0.35);
+  animation:scaleIn .5s ease;
+}
+@keyframes scaleIn{from{transform:scale(0)}to{transform:scale(1)}}
+.score-circle .score-num{font-size:2.2rem;font-weight:800;line-height:1}
+.score-circle .score-denom{font-size:.85rem;opacity:.8}
+#score-message{font-size:1.2rem;font-weight:700;color:var(--dark);margin-bottom:8px}
+#score-sub{font-size:.95rem;color:var(--mid);margin-bottom:28px}
+.score-stars{font-size:2rem;margin-bottom:20px;letter-spacing:4px}
+.btn-restart{
+  background:var(--purple);color:#fff;
+  padding:14px 36px;border-radius:40px;border:none;
+  font-size:1rem;font-weight:700;cursor:pointer;
+  transition:background .2s,transform .2s;
+}
+.btn-restart:hover{background:var(--purple-dark);transform:translateY(-2px)}
+.btn-restart:focus-visible{outline:3px solid var(--purple-dark);outline-offset:3px}
+#completion{
+  display:none;
+  background:linear-gradient(135deg,#1E1B4B,#4C1D95);
+  border-radius:var(--radius-lg);padding:40px;
+  text-align:center;color:#fff;margin-top:20px;
+}
+#completion h2{font-size:1.8rem;font-weight:800;color:var(--yellow);margin-bottom:12px}
+#completion p{color:rgba(255,255,255,0.8);max-width:480px;margin:0 auto 24px}
+.completion-badges{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.badge-item{
+  background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);
+  border-radius:var(--radius);padding:14px 18px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.badge-item .badge-icon{font-size:28px}
+.badge-item .badge-label{font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:.5px;text-transform:uppercase}
+.badge-item .badge-val{font-size:1.1rem;font-weight:700;color:#fff}
+@media(max-width:768px){
+  .section-card{padding:24px 20px}
+  .cover-nav{padding:20px 24px}
+  .funfact{flex-direction:column;gap:12px}
+  .try-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .cover h1{font-size:1.8rem}
+  .section-card h2{font-size:1.2rem}
+  .analogy-box{flex-direction:column;gap:10px}
+}
+:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+a:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+.reading-helper{
+  position:fixed;bottom:24px;right:24px;z-index:200;
+  background:var(--white);border:1px solid #E5E7EB;
+  border-radius:var(--radius);padding:14px 18px;
+  box-shadow:var(--shadow);display:none;
+  flex-direction:column;gap:8px;min-width:180px;
+}
+.reading-helper.open{display:flex}
+.rh-title{font-size:11px;font-weight:700;color:var(--mid);letter-spacing:.8px;text-transform:uppercase;margin-bottom:2px}
+.rh-row{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;color:var(--dark)}
+.rh-btn{background:var(--purple-light);color:var(--purple);border:none;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer;}
+.rh-btn:hover{background:var(--purple-mid)}
+.rh-toggle{
+  position:fixed;bottom:24px;right:24px;z-index:201;display:none;
+  width:44px;height:44px;border-radius:50%;
+  background:var(--purple);color:#fff;border:none;cursor:pointer;
+  font-size:20px;box-shadow:var(--shadow);
+  align-items:center;justify-content:center;transition:transform .2s;
+}
+.rh-toggle.show{display:flex}
+.rh-toggle:hover{transform:scale(1.1)}
+.rh-toggle:focus-visible{outline:3px solid var(--purple-dark);outline-offset:3px}
+body.dyslexia-font{font-family:'Comic Sans MS','Chalkboard SE',cursive!important}
+body.large-text{font-size:19px!important}
+</style>
+</head>
+<body>
+
+<a href="#lesson" class="skip-link">Skip to lesson content</a>
+
+<main id="cover" role="banner" aria-label="Course cover page">
+  <div class="cover-bg-circle cb1" aria-hidden="true"></div>
+  <div class="cover-bg-circle cb2" aria-hidden="true"></div>
+  <div class="cover-bg-circle cb3" aria-hidden="true"></div>
+  <nav class="cover-nav" aria-label="Brand">
+    <div class="brand-logo">
+      <div class="hash" aria-hidden="true">#</div>
+      HashHackCode
+    </div>
+    <div class="cover-badge" role="note">Python Programming</div>
+  </nav>
+  <div class="cover-body">
+    <div class="cover-emoji" role="img" aria-label="Box emoji representing a variable">📦</div>
+    <div class="cover-label">Datateenz · Lesson 1</div>
+    <h1>What is a <span>Variable?</span></h1>
+    <p class="cover-sub">Think of it like a labelled box for your data — let's crack it open and find out what's inside.</p>
+    <div class="cover-pills" role="list" aria-label="Lesson topics">
+      <div class="cover-pill" role="listitem">🐍 Python</div>
+      <div class="cover-pill" role="listitem">⏱ 20 mins</div>
+      <div class="cover-pill" role="listitem">🎯 Beginner</div>
+      <div class="cover-pill" role="listitem">🎮 Interactive</div>
+    </div>
+    <button class="btn-start" onclick="startLesson()" aria-label="Start the lesson on variables">
+      Start Learning ▶
+    </button>
+  </div>
+  <div class="cover-footer">© 2025 HashHackCode · Datateenz Course · All rights reserved</div>
+</main>
+
+<div id="progress-bar-wrap" role="navigation" aria-label="Lesson progress">
+  <div class="progress-inner">
+    <div class="progress-logo">Datateenz</div>
+    <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Lesson completion">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="progress-label" id="progress-label">0%</div>
+  </div>
+</div>
+
+<div id="lesson" aria-label="Lesson content">
+<div class="lesson-container">
+
+  <section class="section-card" aria-labelledby="obj-title">
+    <div class="section-tag tag-purple">🎯 Learning Objectives</div>
+    <h2 id="obj-title">What you'll learn today</h2>
+    <ul class="obj-list" role="list">
+      <li><div class="obj-num" aria-hidden="true">1</div>Understand what a variable is and why we use it in coding</li>
+      <li><div class="obj-num" aria-hidden="true">2</div>Create variables in Python to store names, numbers, and other data</li>
+      <li><div class="obj-num" aria-hidden="true">3</div>Use variables in simple programmes to solve real problems</li>
+      <li><div class="obj-num" aria-hidden="true">4</div>Spot variables in everyday apps you already use</li>
+    </ul>
+  </section>
+
+  <section class="section-card" aria-labelledby="concept-title">
+    <div class="section-tag tag-yellow">💡 The Big Idea</div>
+    <h2 id="concept-title">Variables — Your Code's Memory</h2>
+    <p>Imagine you're making a game. Your player has a name, a score, and a number of lives. How does your programme remember all of that? With <strong>variables</strong>.</p>
+    <p>A variable is a named space in your computer's memory where you can store a piece of information. You give it a name, and you can use or change that information any time you need it.</p>
+    <div class="analogy-box" role="note" aria-label="Analogy: labelled boxes">
+      <div class="analogy-icon" aria-hidden="true">📦</div>
+      <div>
+        <strong>Think of it like this</strong>
+        <p>Imagine a row of boxes with labels on them. One box is labelled <em>name</em>, another is labelled <em>score</em>, another is labelled <em>lives</em>. Each box holds something. You can open any box to look inside, change what's in it, or use it somewhere else. That's exactly what a variable does.</p>
+      </div>
+    </div>
+    <p>In Python, creating a variable is simple. You just write the name, an equals sign, and then the value you want to store:</p>
+    <div class="code-wrap" role="region" aria-label="Python variable example">
+      <div class="code-header">
+        <div class="code-dots" aria-hidden="true">
+          <div class="code-dot dot-r"></div>
+          <div class="code-dot dot-y"></div>
+          <div class="code-dot dot-g"></div>
+        </div>
+        <span>Python · variables.py</span>
+      </div>
+      <div class="code-body">
+        <pre><span class="cm"># Creating variables — three different data types</span>
+<span class="cv">player_name</span> <span class="ck">=</span> <span class="cs">"Zara"</span>         <span class="cm"># a string (text)</span>
+<span class="cv">player_score</span> <span class="ck">=</span> <span class="cn">0</span>              <span class="cm"># an integer (whole number)</span>
+<span class="cv">player_lives</span> <span class="ck">=</span> <span class="cn">3</span>              <span class="cm"># another integer</span>
+
+<span class="cm"># Using variables</span>
+<span class="ck">print</span>(<span class="cs">"Player:"</span>, <span class="cv">player_name</span>)  <span class="cm"># prints → Player: Zara</span>
+<span class="ck">print</span>(<span class="cs">"Score:"</span>, <span class="cv">player_score</span>)  <span class="cm"># prints → Score: 0</span>
+
+<span class="cm"># Changing a variable</span>
+<span class="cv">player_score</span> <span class="ck">=</span> <span class="cv">player_score</span> <span class="ck">+</span> <span class="cn">10</span>
+<span class="ck">print</span>(<span class="cs">"New score:"</span>, <span class="cv">player_score</span>)  <span class="cm"># prints → New score: 10</span></pre>
+      </div>
+    </div>
+    <p>Notice that <code>player_score = player_score + 10</code> takes the current value, adds 10, and stores the result back in the same box. The box now contains 10 instead of 0.</p>
+  </section>
+
+  <section class="section-card" aria-labelledby="try-title">
+    <div class="section-tag tag-green">⚡ Try It Yourself</div>
+    <h2 id="try-title">Build Your Player Profile</h2>
+    <p>Fill in the boxes below — you're creating your own variables! When you click Run, your programme will use them to introduce your player.</p>
+    <div class="try-grid" role="group" aria-labelledby="try-title">
+      <div class="try-field">
+        <label for="inp-name">player_name =</label>
+        <input type="text" id="inp-name" placeholder='"Your name here"' aria-required="true" maxlength="30">
+      </div>
+      <div class="try-field">
+        <label for="inp-age">player_age =</label>
+        <input type="number" id="inp-age" placeholder="Your age" min="1" max="99" aria-required="true">
+      </div>
+      <div class="try-field">
+        <label for="inp-game">favourite_game =</label>
+        <input type="text" id="inp-game" placeholder='"e.g. Minecraft"' maxlength="30">
+      </div>
+      <div class="try-field">
+        <label for="inp-score">starting_score =</label>
+        <input type="number" id="inp-score" placeholder="e.g. 100" min="0" max="9999">
+      </div>
+    </div>
+    <button class="btn-run" onclick="runActivity()" aria-label="Run the code with your values">▶ Run My Code</button>
+    <div class="output-box" id="try-output" role="alert" aria-live="polite"></div>
+  </section>
+
+  <section class="section-card" aria-labelledby="fact-title">
+    <div class="section-tag tag-pink">✨ Did You Know?</div>
+    <h2 id="fact-title">Variables Are Everywhere</h2>
+    <div class="funfact" role="note">
+      <div class="funfact-icon" aria-hidden="true">🧠</div>
+      <div>
+        <h3>Fun Fact</h3>
+        <p>The first programming language to use variables as we know them today was <strong>FORTRAN</strong>, created in 1957. That's over 65 years ago! Back then, programmers had to manually punch holes in cards to write code — but the concept of "store a value, give it a name, use it later" has never changed.</p>
+      </div>
+    </div>
+    <div class="realworld" role="note" aria-label="Real-world connection">
+      <strong>🌍 Real-World Connection</strong>
+      <p>Right now, as you scroll through TikTok or Instagram, there are variables running behind the scenes — <code>current_user</code>, <code>video_likes</code>, <code>scroll_position</code>. Every app you use on your phone is full of thousands of variables working together, all doing exactly what you just learned.</p>
+    </div>
+  </section>
+
+  <section class="section-card" aria-labelledby="quiz-title">
+    <div class="section-tag tag-blue">🧩 Knowledge Check</div>
+    <h2 id="quiz-title">Test What You Know</h2>
+    <p>Answer the questions below — you'll get instant feedback after each one. No pressure, just learning!</p>
+
+    <div style="margin:24px 0 32px">
+      <h3 style="font-size:1rem;font-weight:700;color:var(--dark);margin-bottom:6px">Fill in the Blank</h3>
+      <p style="font-size:.9rem;color:var(--mid);margin-bottom:4px">Complete the sentence by typing the missing word.</p>
+      <div class="blank-sentence" role="group" aria-labelledby="blank-label">
+        <span id="blank-label" style="display:none">Fill in the blank sentence</span>
+        A variable is like a labelled
+        <input class="blank-input" id="blank-inp" type="text" placeholder="???" aria-label="Fill in the blank: A variable is like a labelled what?" maxlength="10">
+        that stores information in your programme.
+      </div>
+      <button class="btn-check" onclick="checkBlank()" aria-label="Check your fill-in-the-blank answer">Check Answer</button>
+      <div class="blank-result" id="blank-result" role="alert" aria-live="polite"></div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid #F3F4F6;margin:0 0 28px">
+
+    <h3 style="font-size:1rem;font-weight:700;color:var(--dark);margin-bottom:20px">Multiple Choice — 4 Questions</h3>
+    <div class="quiz-progress" role="list" aria-label="Quiz question progress" id="quiz-dots"></div>
+
+    <div id="quiz-questions">
+      <div class="question-wrap active" id="q1" role="group" aria-labelledby="q1-text">
+        <div class="question-num">Question 1 of 4</div>
+        <p class="question-text" id="q1-text">Which of these is the correct way to create a variable in Python?</p>
+        <div class="options-list" role="list">
+          <button class="option-btn" onclick="answer(this,false,'q1')" aria-label="Option A"><span class="option-letter">A</span> variable name = "Zara"</button>
+          <button class="option-btn" onclick="answer(this,true,'q1')" aria-label="Option B"><span class="option-letter">B</span> player_name = "Zara"</button>
+          <button class="option-btn" onclick="answer(this,false,'q1')" aria-label="Option C"><span class="option-letter">C</span> create player_name "Zara"</button>
+          <button class="option-btn" onclick="answer(this,false,'q1')" aria-label="Option D"><span class="option-letter">D</span> name variable = "Zara"</button>
+        </div>
+        <div class="feedback-msg" id="fb-q1" role="alert" aria-live="polite"></div>
+        <button class="btn-next" id="next-q1" onclick="nextQuestion(2)" aria-label="Go to question 2">Next Question →</button>
+      </div>
+
+      <div class="question-wrap" id="q2" role="group" aria-labelledby="q2-text">
+        <div class="question-num">Question 2 of 4</div>
+        <p class="question-text" id="q2-text">What is stored in the variable <code>score = 42</code>?</p>
+        <div class="options-list" role="list">
+          <button class="option-btn" onclick="answer(this,false,'q2')" aria-label="Option A"><span class="option-letter">A</span> The word "forty-two"</button>
+          <button class="option-btn" onclick="answer(this,false,'q2')" aria-label="Option B"><span class="option-letter">B</span> Nothing — it is empty</button>
+          <button class="option-btn" onclick="answer(this,true,'q2')" aria-label="Option C"><span class="option-letter">C</span> The number 42</button>
+          <button class="option-btn" onclick="answer(this,false,'q2')" aria-label="Option D"><span class="option-letter">D</span> The letter "s"</button>
+        </div>
+        <div class="feedback-msg" id="fb-q2" role="alert" aria-live="polite"></div>
+        <button class="btn-next" id="next-q2" onclick="nextQuestion(3)" aria-label="Go to question 3">Next Question →</button>
+      </div>
+
+      <div class="question-wrap" id="q3" role="group" aria-labelledby="q3-text">
+        <div class="question-num">Question 3 of 4</div>
+        <p class="question-text" id="q3-text">After running <code>lives = 3</code> and then <code>lives = lives - 1</code>, what is the value of lives?</p>
+        <div class="options-list" role="list">
+          <button class="option-btn" onclick="answer(this,false,'q3')" aria-label="Option A"><span class="option-letter">A</span> 3</button>
+          <button class="option-btn" onclick="answer(this,true,'q3')" aria-label="Option B"><span class="option-letter">B</span> 2</button>
+          <button class="option-btn" onclick="answer(this,false,'q3')" aria-label="Option C"><span class="option-letter">C</span> 1</button>
+          <button class="option-btn" onclick="answer(this,false,'q3')" aria-label="Option D"><span class="option-letter">D</span> -1</button>
+        </div>
+        <div class="feedback-msg" id="fb-q3" role="alert" aria-live="polite"></div>
+        <button class="btn-next" id="next-q3" onclick="nextQuestion(4)" aria-label="Go to question 4">Next Question →</button>
+      </div>
+
+      <div class="question-wrap" id="q4" role="group" aria-labelledby="q4-text">
+        <div class="question-num">Question 4 of 4</div>
+        <p class="question-text" id="q4-text">Which of these is the best variable name for storing someone's age?</p>
+        <div class="options-list" role="list">
+          <button class="option-btn" onclick="answer(this,false,'q4')" aria-label="Option A"><span class="option-letter">A</span> x</button>
+          <button class="option-btn" onclick="answer(this,false,'q4')" aria-label="Option B"><span class="option-letter">B</span> data</button>
+          <button class="option-btn" onclick="answer(this,false,'q4')" aria-label="Option C"><span class="option-letter">C</span> number_of_years_person_has_been_alive</button>
+          <button class="option-btn" onclick="answer(this,true,'q4')" aria-label="Option D"><span class="option-letter">D</span> user_age</button>
+        </div>
+        <div class="feedback-msg" id="fb-q4" role="alert" aria-live="polite"></div>
+        <button class="btn-next" id="next-q4" onclick="showScore()" aria-label="See your final score">See My Score →</button>
+      </div>
+    </div>
+
+    <div id="score-screen" aria-live="polite" aria-label="Quiz results">
+      <div class="score-circle" aria-hidden="true">
+        <div class="score-num" id="score-num">0</div>
+        <div class="score-denom">out of 4</div>
+      </div>
+      <div class="score-stars" id="score-stars" aria-label="Star rating"></div>
+      <p id="score-message"></p>
+      <p id="score-sub"></p>
+      <button class="btn-restart" onclick="restartQuiz()" aria-label="Try the quiz again">Try Again</button>
+    </div>
+  </section>
+
+  <div id="completion" role="region" aria-label="Lesson completion">
+    <h2>🎉 Lesson Complete!</h2>
+    <p>Amazing work — you've just finished your first Datateenz lesson. You now know what variables are, how to use them in Python, and where they appear in real apps.</p>
+    <div class="completion-badges" role="list" aria-label="Your achievements">
+      <div class="badge-item" role="listitem">
+        <div class="badge-icon" aria-hidden="true">🐍</div>
+        <div class="badge-label">Skill</div>
+        <div class="badge-val">Python Variables</div>
+      </div>
+      <div class="badge-item" role="listitem">
+        <div class="badge-icon" aria-hidden="true">⭐</div>
+        <div class="badge-label">Achievement</div>
+        <div class="badge-val">First Lesson</div>
+      </div>
+      <div class="badge-item" role="listitem">
+        <div class="badge-icon" aria-hidden="true">🧩</div>
+        <div class="badge-label">Quiz Done</div>
+        <div class="badge-val" id="final-score-badge">— / 4</div>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restartAll()" aria-label="Return to cover page and restart">← Back to Start</button>
+  </div>
+
+</div>
+</div>
+
+<button class="rh-toggle" id="rh-toggle" onclick="toggleHelper()" aria-label="Open accessibility options" aria-expanded="false">♿</button>
+<div class="reading-helper" id="reading-helper" role="dialog" aria-label="Accessibility options" aria-modal="false">
+  <div class="rh-title">Accessibility</div>
+  <div class="rh-row">
+    <span>Dyslexia font</span>
+    <button class="rh-btn" onclick="toggleDyslexia()" id="dyslexia-btn" aria-pressed="false">Off</button>
+  </div>
+  <div class="rh-row">
+    <span>Larger text</span>
+    <button class="rh-btn" onclick="toggleLargeText()" id="large-btn" aria-pressed="false">Off</button>
+  </div>
+</div>
+
+<script>
+var quizScore=0,answeredQuestions={},currentQuestion=1,totalQuestions=4;
+
+function buildDots(){var w=document.getElementById('quiz-dots');w.innerHTML='';for(var i=1;i<=totalQuestions;i++){var d=document.createElement('div');d.className='quiz-dot';d.id='dot-'+i;d.setAttribute('role','listitem');d.setAttribute('aria-label','Question '+i);w.appendChild(d);
+}}
+
+function startLesson(){document.getElementById('cover').style.display='none';document.getElementById('lesson').style.display='block';document.getElementById('progress-bar-wrap').style.display='block';document.querySelector('.rh-toggle').style.display='flex';buildDots();updateProgress(10);document.getElementById('lesson').focus();window.addEventListener('scroll',updateScrollProgress);}
+
+function updateProgress(pct){var f=document.getElementById('progress-fill'),l=document.getElementById('progress-label'),t=f.parentElement;f.style.width=pct+'%';l.textContent=Math.round(pct)+'%';t.setAttribute('aria-valuenow',Math.round(pct));}
+
+function updateScrollProgress(){var lesson=document.getElementById('lesson'),st=window.scrollY,dh=lesson.scrollHeight-window.innerHeight;if(dh<=0)return;updateProgress(Math.min(100,Math.max(10,(st/dh)*100)));}
+
+function runActivity(){var n=document.getElementById('inp-name').value.trim()||'Unknown',a=document.getElementById('inp-age').value||'?',g=document.getElementById('inp-game').value.trim()||'Unknown',s=document.getElementById('inp-score').value||'0',b=document.getElementById('try-output');b.style.display='block';b.innerHTML='🖥️ <strong>Programme Output</strong><br><br>👾 Player name: <strong>'+e(n)+'</strong><br>🎂 Age: <strong>'+e(a)+'</strong><br>🎮 Favourite game: <strong>'+e(g)+'</strong><br>⭐ Starting score: <strong>'+e(s)+'</strong><br><br><span style="color:var(--green);font-size:.85rem">✅ Variables created and used successfully!</span>';}
+
+function e(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function checkBlank(){var i=document.getElementById('blank-inp'),r=document.getElementById('blank-result'),v=i.value.trim().toLowerCase(),ok=['box','container','bucket','storage'].indexOf(v)!==-1;r.className='blank-result show '+(ok?'feedback-correct':'feedback-wrong');if(!v){r.textContent='💭 Type your answer first — hint: think of something physical that holds items.';}else if(ok){r.textContent='✅ Correct! "Box" (or container) is a great way to describe a variable.';i.style.borderBottomColor='var(--green)';}else{r.textContent='🤔 Not quite. Think about what physically holds things — like a box or a container.';i.style.borderBottomColor='var(--red)';}}
+
+function answer(btn,isCorrect,qId){if(answeredQuestions[qId])return;answeredQuestions[qId]=isCorrect?'correct':'wrong';var btns=btn.closest('.question-wrap').querySelectorAll('.option-btn');btns.forEach(function(b){b.disabled=true;});btn.classList.add(isCorrect?'correct':'wrong');if(!isCorrect){btns.forEach(function(b){if(b.onclick.toString().indexOf('true')!==-1)b.classList.add('correct');});}var fb=document.getElementById('fb-'+qId);if(isCorrect){quizScore++;fb.className='feedback-msg show feedback-correct';fb.textContent='🎉 Correct! Well done.';}else{fb.className='feedback-msg show feedback-wrong';var ex={q1:'In Python, variable names can\'t have spaces. Use underscores: player_name = "Zara".',q2:'42 without quotes is an integer. Quotes would make it a string of text.',q3:'lives starts at 3, then 3 - 1 = 2. The box now contains 2.',q4:'"user_age" is clear and descriptive — short enough to type, long enough to understand.'};fb.textContent='💡 '+(ex[qId]||'Not quite — check the explanation above.');}var dot=document.getElementById('dot-'+qId.replace('q',''));if(dot)dot.classList.add(isCorrect?'correct':'wrong');var nb=document.getElementById('next-'+qId);if(nb)nb.style.display='inline-block';}
+
+function nextQuestion(num){document.getElementById('q'+(num-1)).classList.remove('active');var next=document.getElementById('q'+num);if(next){next.classList.add('active');next.querySelector('.option-btn').focus();}currentQuestion=num;}
+
+function showScore(){document.getElementById('q4').classList.remove('active');var sc=document.getElementById('score-screen');sc.style.display='block';document.getElementById('score-num').textContent=quizScore;document.getElementById('final-score-badge').textContent=quizScore+' / 4';var stars=quizScore>=4?'⭐⭐⭐':quizScore>=3?'⭐⭐':quizScore>=2?'⭐':'';document.getElementById('score-stars').textContent=stars;var m={4:['Perfect Score! 🏆',"You nailed every question. You've totally got variables!"],3:['Great Work! 🎯',"3 out of 4 — review the one you missed and you'll be perfect."],2:['Nice Try! 💪',"2 out of 4 — re-read the lesson and try again."],1:['Keep Going! 🌱',"1 out of 4 — read back through the lesson and have another go."],0:['No Worries! 📚',"0 out of 4 — go back through the lesson carefully and try again."]};var msg=m[quizScore]||m[0];document.getElementById('score-message').textContent=msg[0];document.getElementById('score-sub').textContent=msg[1];if(quizScore>=2)document.getElementById('completion').style.display='block';updateProgress(100);}
+
+function restartQuiz(){quizScore=0;answeredQuestions={};currentQuestion=1;for(var i=1;i<=totalQuestions;i++){var q=document.getElementById('q'+i);q.classList.remove('active');q.querySelectorAll('.option-btn').forEach(function(b){b.disabled=false;b.classList.remove('correct','wrong');});var fb=document.getElementById('fb-q'+i);fb.className='feedback-msg';fb.textContent='';var nb=document.getElementById('next-q'+i);if(nb)nb.style.display='none';}document.getElementById('q1').classList.add('active');document.getElementById('score-screen').style.display='none';document.getElementById('completion').style.display='none';buildDots();updateProgress(60);}
+
+function restartAll(){restartQuiz();document.getElementById('lesson').style.display='none';document.getElementById('progress-bar-wrap').style.display='none';document.getElementById('cover').style.display='flex';document.querySelector('.rh-toggle').style.display='none';document.getElementById('try-output').style.display='none';document.getElementById('blank-result').className='blank-result';['blank-inp','inp-name','inp-age','inp-game','inp-score'].forEach(function(id){document.getElementById(id).value='';});window.scrollTo(0,0);window.removeEventListener('scroll',updateScrollProgress);}
+
+document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.activeElement.classList.contains('option-btn'))document.activeElement.click();});
+
+function toggleHelper(){var h=document.getElementById('reading-helper'),t=document.getElementById('rh-toggle'),o=h.classList.contains('open');h.classList.toggle('open');t.setAttribute('aria-expanded',!o);}
+var dyslexiaOn=false,largeTextOn=false;
+
+function toggleDyslexia(){dyslexiaOn=!dyslexiaOn;document.body.classList.toggle('dyslexia-font',dyslexiaOn);var b=document.getElementById('dyslexia-btn');b.textContent=dyslexiaOn?'On':'Off';b.setAttribute('aria-pressed',dyslexiaOn);}
+
+function toggleLargeText(){largeTextOn=!largeTextOn;document.body.classList.toggle('large-text',largeTextOn);var b=document.getElementById('large-btn');b.textContent=largeTextOn?'On':'Off';b.setAttribute('aria-pressed',largeTextOn);}
+document.addEventListener('DOMContentLoaded',function(){var bi=document.getElementById('blank-inp');if(bi)bi.addEventListener('keydown',function(e){if(e.key==='Enter')checkBlank();});['inp-name','inp-age','inp-game','inp-score'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('keydown',function(e){if(e.key==='Enter')runActivity();});});});
+
+</script>
+</body>
+</html>
